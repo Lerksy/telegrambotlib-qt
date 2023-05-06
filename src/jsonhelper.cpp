@@ -3,7 +3,7 @@
 QVariant JsonHelper::jsonPathGetImpl(QJsonValue data, QString path, bool showWarnings)
 {
     // json parse
-    QStringList splittedPath = path.split('.', QString::SkipEmptyParts);
+    QStringList splittedPath = path.split('.', Qt::SkipEmptyParts);
     QStringList processed;
     while(!splittedPath.isEmpty()) {
         QString pathElement = splittedPath.takeFirst();
@@ -23,13 +23,14 @@ QVariant JsonHelper::jsonPathGetImpl(QJsonValue data, QString path, bool showWar
             }
             else if(showWarnings && jArray.count() <= intPath) {
                 if(jArray.count() >= 1) {
-                    qWarning("JsonHelper::jsonPath: pos: %s -> QJsonArray with length %i, is smaller than requested",  qPrintable(processed.join(".")), jArray.count());
+                    qWarning("JsonHelper::jsonPath: pos: %s -> QJsonArray with length %lli, is smaller than requested",  qPrintable(processed.join(".")), jArray.count());
                 } else {
                     qWarning("JsonHelper::jsonPath: pos: %s -> QJsonArray is empty so cannot access requested index",  qPrintable(processed.join(".")));
                 }
             }
             data = jArray.at(intPath);
         }
+
 
         // handle QJsonObject
         else if(data.type() == QJsonValue::Object) {

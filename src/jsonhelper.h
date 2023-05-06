@@ -27,21 +27,20 @@ class JsonHelper
         static QVariant jsonPathGetImpl(QJsonValue data, QString path, bool showWarnings);
 };
 
+
 template<typename T, class Enable = void>
 class JsonHelperT
 {
     public:
-        static inline bool jsonPathGet(QJsonValue data, QString path, T& target, bool showWarnings = true)
-        {
+        static inline bool jsonPathGet(QJsonValue data, QString path, T& target, bool showWarnings = true){
             return JsonHelper::jsonPathGet(data, path, target, showWarnings);
         }
-        static bool jsonPathGetArray(QJsonValue data, QString path, QList<T>& target, bool showWarnings = true)
-        {
+        static bool jsonPathGetArray(QJsonValue data, QString path, QList<T>& target, bool showWarnings = true){
             QJsonValue value = showWarnings ? JsonHelper::jsonPathGet(data, path).toJsonValue() : JsonHelper::jsonPathGetSilent(data, path).toJsonValue();
             if(value.isArray()) {
                 QJsonArray jArray = value.toArray();
                 for(auto itr = jArray.begin(); itr != jArray.end(); itr++) {
-                    JsonHelper::jsonPathGet(*itr, QString::number(itr.i), *target.insert(target.end(), T{}), showWarnings);
+                    JsonHelper::jsonPathGet(*itr, QString::number(itr-jArray.begin()), *target.insert(target.end(), T{}), showWarnings);
                 }
             } else if(value.isObject()) {
                 QJsonObject jObject = value.toObject();
@@ -59,7 +58,7 @@ class JsonHelperT
             if(value.isArray()) {
                 QJsonArray jArray = value.toArray();
                 for(auto itr = jArray.begin(); itr != jArray.end(); itr++) {
-                    JsonHelperT::jsonPathGetArray(*itr, QString::number(itr.i), *target.insert(target.end(), QList<T>()), showWarnings);
+                    JsonHelperT::jsonPathGetArray(*itr, QString::number(itr-jArray.begin()), *target.insert(target.end(), QList<T>()), showWarnings);
                 }
             } else if(value.isObject()) {
                 QJsonObject jObject = value.toObject();

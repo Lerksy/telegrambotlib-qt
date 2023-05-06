@@ -21,6 +21,7 @@ class JsonHelperT<T, typename std::enable_if<std::is_base_of<TelegramBotObject, 
             return true;
         }
 
+
         static bool jsonPathGetArray(QJsonValue data, QString path, QList<T>& target, bool showWarnings = true)
         {
             QJsonArray array = showWarnings ? JsonHelper::jsonPathGet(data, path).toJsonArray() : JsonHelper::jsonPathGetSilent(data, path).toJsonArray();

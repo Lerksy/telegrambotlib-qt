@@ -12,10 +12,11 @@ class SSLServer : public QTcpServer
 {
     Q_OBJECT
     signals:
+
         void connectionReady();
 
     public:
-        SSLServer(QObject* parent = 0);
+        SSLServer(QObject* parent = nullptr);
         bool setPrivateKey(QString keyFile, QSsl::KeyAlgorithm algorithmn = QSsl::KeyAlgorithm::Rsa);
         bool setPrivateKeyRaw(QByteArray& keyFileContent, QSsl::KeyAlgorithm algorithmn = QSsl::KeyAlgorithm::Rsa);
         bool isSamePrivateKey(QString keyFile, QSsl::KeyAlgorithm algorithmn = QSsl::KeyAlgorithm::Rsa);

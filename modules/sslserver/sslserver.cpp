@@ -22,6 +22,7 @@ bool SSLServer::setPrivateKeyRaw(QByteArray &keyFileContent, QSsl::KeyAlgorithm 
     return !this->sslKey.isNull();
 }
 
+
 bool SSLServer::isSamePrivateKey(QString keyFile, QSsl::KeyAlgorithm algorithmn)
 {
     auto data = this->getFileContent(keyFile);
