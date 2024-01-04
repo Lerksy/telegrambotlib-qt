@@ -861,23 +861,23 @@ QNetworkReply* TelegramBot::callApi(QString method, QUrlQuery params, bool delet
 
 QJsonObject TelegramBot::callApiJson(QString method, QUrlQuery params, QHttpMultiPart *multiPart)
 {
-    // exec request
-    failCase:
-    QNetworkReply* reply = this->callApi(method, params, false, multiPart);
-
-    // wait async for answer
-    QEventLoop loop;
-    QTimer::singleShot(30*1000, &loop, &QEventLoop::quit);
-    QObject::connect(reply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
-    loop.exec();
-
-    if(reply->isRunning()){
-        reply->abort();
-        aManager.clearAccessCache();
-        aManager.clearConnectionCache();
-        delete reply;
-        goto failCase;
-    }
+    QNetworkReply* reply = nullptr;
+    do{
+        // exec request
+        reply = this->callApi(method, params, false, multiPart);
+        // wait async for answer
+        QEventLoop loop;
+        QTimer::singleShot(30*1000, &loop, &QEventLoop::quit);
+        QObject::connect(reply, &QNetworkReply::finished, &loop, &QEventLoop::quit);
+        loop.exec();
+        if(reply->isRunning()){
+            reply->abort();
+            aManager.clearAccessCache();
+            aManager.clearConnectionCache();
+            delete reply;
+            reply = nullptr;
+        }
+    }while(!reply);
 
     // parse answer
     QByteArray replyData = reply->readAll();
