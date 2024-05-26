@@ -41,7 +41,10 @@ TelegramKeyboardRequest TelegramBot::constructInlineMenu(QList<QString> menu, QS
     return keyboard;
 }
 
-TelegramBot::TelegramBot(QString apikey, QObject *parent) : QObject(parent), apiKey(apikey) { }
+TelegramBot::TelegramBot(QString apikey, QObject *parent) : QObject(parent), apiKey(apikey)
+{
+    aManager.setParent(this);
+}
 
 TelegramBot::~TelegramBot()
 {
